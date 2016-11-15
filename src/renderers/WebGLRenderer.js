@@ -52,6 +52,7 @@ function WebGLRenderer( parameters ) {
 	_depth = parameters.depth !== undefined ? parameters.depth : true,
 	_stencil = parameters.stencil !== undefined ? parameters.stencil : true,
 	_antialias = parameters.antialias !== undefined ? parameters.antialias : false,
+	_holographic = parameters.holographic !== undefined ? parameters.holographic : false,
 	_premultipliedAlpha = parameters.premultipliedAlpha !== undefined ? parameters.premultipliedAlpha : true,
 	_preserveDrawingBuffer = parameters.preserveDrawingBuffer !== undefined ? parameters.preserveDrawingBuffer : false;
 
@@ -108,6 +109,10 @@ function WebGLRenderer( parameters ) {
 
 	this.maxMorphTargets = 8;
 	this.maxMorphNormals = 4;
+
+	// holographics
+
+	this.holographic = _holographic;
 
 	// internal properties
 
@@ -603,6 +608,7 @@ function WebGLRenderer( parameters ) {
 		if ( object.hasNormals && ! buffers.normal ) buffers.normal = _gl.createBuffer();
 		if ( object.hasUvs && ! buffers.uv ) buffers.uv = _gl.createBuffer();
 		if ( object.hasColors && ! buffers.color ) buffers.color = _gl.createBuffer();
+		if ( _holographic ) buffers.aRenderTargetArrayIndex = _gl.createBuffer();
 
 		var attributes = program.getAttributes();
 
@@ -675,6 +681,17 @@ function WebGLRenderer( parameters ) {
 			state.enableAttribute( attributes.color );
 
 			_gl.vertexAttribPointer( attributes.color, 3, _gl.FLOAT, false, 0, 0 );
+
+		}
+
+		if (_holographic) {
+
+			_gl.bindBuffer( _gl.ARRAY_BUFFER, buffers.aRenderTargetArrayIndex );
+			_gl.bufferData( _gl.ARRAY_BUFFER, Float32Array.from([0., 1.]), _gl.DYNAMIC_DRAW );
+
+			_gl.vertexAttribPointer( attributes.aRenderTargetArrayIndex, 1, _gl.FLOAT, false, 0, 0 );
+		
+			_gl.vertexAttribDivisorANGLE( attributes.aRenderTargetArrayIndex, 1 );
 
 		}
 

@@ -8,4 +8,15 @@
 
 #endif
 
-gl_Position = projectionMatrix * mvPosition;
+
+#ifdef USE_HOLOGRAPHICS
+
+	int arrayIndex = int(aRenderTargetArrayIndex);
+	gl_Position = uHolographicProjectionMatrix[arrayIndex] * mvPosition;
+	vRenderTargetArrayIndex = aRenderTargetArrayIndex;
+
+#else
+
+    gl_Position = projectionMatrix * mvPosition;
+
+#endif

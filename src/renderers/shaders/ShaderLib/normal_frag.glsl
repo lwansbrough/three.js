@@ -11,6 +11,8 @@ void main() {
 	#include <clipping_planes_fragment>
 	gl_FragColor = vec4( packNormalToRGB( vNormal ), opacity );
 
+	float index = vRenderTargetArrayIndex;
+
 	#include <logdepthbuf_fragment>
 
 }

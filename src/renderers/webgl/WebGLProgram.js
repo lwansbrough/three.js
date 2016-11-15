@@ -358,6 +358,8 @@ function WebGLProgram( renderer, code, material, parameters ) {
 			parameters.logarithmicDepthBuffer ? '#define USE_LOGDEPTHBUF' : '',
 			parameters.logarithmicDepthBuffer && renderer.extensions.get( 'EXT_frag_depth' ) ? '#define USE_LOGDEPTHBUF_EXT' : '',
 
+			parameters.holographic ? '#define USE_HOLOGRAPHICS' : '',
+
 			'uniform mat4 modelMatrix;',
 			'uniform mat4 modelViewMatrix;',
 			'uniform mat4 projectionMatrix;',
@@ -404,6 +406,14 @@ function WebGLProgram( renderer, code, material, parameters ) {
 
 			'	attribute vec4 skinIndex;',
 			'	attribute vec4 skinWeight;',
+
+			'#endif',
+
+			'#ifdef USE_HOLOGRAPHICS',
+
+			'   uniform mat4 uHolographicProjectionMatrix[2];',
+			'   attribute float aRenderTargetArrayIndex;',
+			'   varying float vRenderTargetArrayIndex;',
 
 			'#endif',
 
@@ -479,6 +489,14 @@ function WebGLProgram( renderer, code, material, parameters ) {
 			parameters.outputEncoding ? getTexelEncodingFunction( "linearToOutputTexel", parameters.outputEncoding ) : '',
 
 			parameters.depthPacking ? "#define DEPTH_PACKING " + material.depthPacking : '',
+
+			parameters.holographic ? '#define USE_HOLOGRAPHICS' : '',
+
+			'#ifdef USE_HOLOGRAPHICS',
+
+			'   varying float vRenderTargetArrayIndex;',
+
+			'#endif',
 
 			'\n'
 

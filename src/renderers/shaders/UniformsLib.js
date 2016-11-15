@@ -157,7 +157,7 @@ var UniformsLib = {
 		offsetRepeat: { value: new Vector4( 0, 0, 1, 1 ) }
 
 	}
-
+	
 };
 
 
